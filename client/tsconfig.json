@@ -1,0 +1,29 @@
+{
+  "include": ["src"],
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "@interfaces": ["src/interfaces"],
+      "@interfaces/*": ["src/interfaces/*"],
+      "@pages": ["src/components/pages"],
+      "@pages/*": ["src/components/pages/*"],
+      "@UI": ["src/components/UI"],
+      "@UI/*": ["src/components/UI/*"],
+      "@forms": ["src/forms"],
+      "@forms/*": ["src/forms/*"],
+      "@services": ["src/services"],
+      "@services/*": ["src/services/*"],
+      "@utils": ["src/utils"],
+      "@utils/*": ["src/utils/*"],
+      "@common": ["src/components/common"],
+      "@common/*": ["src/components/common/*"],
+      "@config": ["src/config"],
+      "@config/*": ["src/config/*"],
+      "@store": ["src/store"],
+      "@store/*": ["src/store/*"]
+    },
+    "jsx": "react-jsx",
+    "resolveJsonModule": true,
+    "esModuleInterop": true
+  }
+}
