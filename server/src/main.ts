@@ -3,11 +3,13 @@ import { AppModule } from './app.module';
 import { corsOptions } from '@config/cors-options.config';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { join } from 'path';
 
 const PORT = process.env.PORT ?? 3000;
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   app.enableCors(corsOptions);
   app.setGlobalPrefix('api');

@@ -1,0 +1,15 @@
+model Product {
+  id String @id @default(uuid())
+  name String @unique
+  description String
+  price Float
+  discountPrice Float @map("discount_price")
+  sku String
+  images String[]
+  userId String @map("user_id") 
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("products")
+}

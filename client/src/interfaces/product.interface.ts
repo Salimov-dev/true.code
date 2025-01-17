@@ -1,10 +1,13 @@
 export interface IProduct {
+  id: string;
   name: string;
   description: string;
   price: number;
   discountPrice: number;
   sku: string;
-  image?: string | null;
+  images?: string[] | [] | null;
+  // images?: UploadFile[] | null;
+  userId: string;
 }
 
 export interface IProductImageUpload {

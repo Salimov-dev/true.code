@@ -1,35 +1,83 @@
 import { FC } from "react";
-import { Form, FormInstance, FormProps, Input } from "antd";
+import { Form, FormInstance, Input } from "antd";
 import { regexPatterns } from "@utils/regex/regex.utils";
 import { IRegister } from "@interfaces/auth.interface";
 import SubmitButtonForm from "@common/buttons/submit-button.form";
-import useAuthStore from "@store/auth.store";
 
 interface IProps {
   form: FormInstance;
-  onCancel: () => void;
+  onFinish: (values: IRegister) => void;
 }
 
-const RegisterForm: FC<IProps> = ({ form, onCancel }): JSX.Element => {
-  const { register } = useAuthStore();
-
-  const handleFinish: FormProps<IRegister>["onFinish"] = async (
-    registerData
-  ) => {
-    register(registerData);
-    form.resetFields();
-    onCancel();
-  };
-
+const RegisterForm: FC<IProps> = ({ form, onFinish }): JSX.Element => {
   return (
     <Form
       form={form}
       name="register"
       initialValues={{ remember: true }}
-      onFinish={handleFinish}
+      onFinish={onFinish}
       autoComplete="off"
       style={{ margin: "20px 0 10px 0" }}
     >
+      <Form.Item<IRegister>
+        label="Имя"
+        name="firstName"
+        rules={[
+          { required: true, message: "Введите своё имя!" },
+          {
+            min: 3,
+            max: 20,
+            message: "Имя должно быть длинной от 2 до 20 символов"
+          }
+        ]}
+      >
+        <Input autoComplete="firstName" placeholder="Введите имя" />
+      </Form.Item>
+
+      <Form.Item<IRegister>
+        label="Фамилия"
+        name="lastName"
+        rules={[
+          { required: true, message: "Введите свою фамилию!" },
+          {
+            min: 3,
+            max: 20,
+            message: "Фамилия должна быть длинной от 2 до 20 символов"
+          }
+        ]}
+      >
+        <Input autoComplete="lastName" placeholder="Введите фамилию" />
+      </Form.Item>
+
+      <Form.Item<IRegister>
+        label="Почта"
+        name="email"
+        rules={[
+          { required: true, message: "Введите свою почту!" },
+          {
+            pattern: regexPatterns.EMAIL,
+            message: "Введите почту корректно!"
+          }
+        ]}
+      >
+        <Input autoComplete="email" placeholder="Введите почту" />
+      </Form.Item>
+
+      <Form.Item<IRegister>
+        label="Телефон"
+        name="phone"
+        rules={[
+          { required: true, message: "Введите свой телефон!" },
+          {
+            min: 3,
+            max: 20,
+            message: "Телефон должен быть длинной от 6 до 20 символов"
+          }
+        ]}
+      >
+        <Input autoComplete="phone" placeholder="Введите телефон" />
+      </Form.Item>
+
       <Form.Item<IRegister>
         label="Имя пользователя"
         name="userName"
@@ -42,7 +90,7 @@ const RegisterForm: FC<IProps> = ({ form, onCancel }): JSX.Element => {
           }
         ]}
       >
-        <Input autoComplete="userName" />
+        <Input autoComplete="userName" placeholder="Введите имя пользователя" />
       </Form.Item>
 
       <Form.Item<IRegister>
@@ -61,7 +109,10 @@ const RegisterForm: FC<IProps> = ({ form, onCancel }): JSX.Element => {
           }
         ]}
       >
-        <Input.Password autoComplete="current-password" />
+        <Input.Password
+          autoComplete="new-password"
+          placeholder="Введите пароль"
+        />
       </Form.Item>
 
       <Form.Item<IRegister>
@@ -81,6 +132,7 @@ const RegisterForm: FC<IProps> = ({ form, onCancel }): JSX.Element => {
           {
             validator(_, value) {
               const password = form.getFieldValue("password");
+
               if (!value || password !== value) {
                 return Promise.reject(
                   new Error("Введенные пароли не совпадают!")
@@ -92,66 +144,10 @@ const RegisterForm: FC<IProps> = ({ form, onCancel }): JSX.Element => {
           }
         ]}
       >
-        <Input.Password autoComplete="new-password" />
-      </Form.Item>
-
-      <Form.Item<IRegister>
-        label="Имя"
-        name="firstName"
-        rules={[
-          { required: true, message: "Введите своё имя!" },
-          {
-            min: 3,
-            max: 20,
-            message: "Имя должно быть длинной от 2 до 20 символов"
-          }
-        ]}
-      >
-        <Input />
-      </Form.Item>
-
-      <Form.Item<IRegister>
-        label="Фамилия"
-        name="lastName"
-        rules={[
-          { required: true, message: "Введите свою фамилию!" },
-          {
-            min: 3,
-            max: 20,
-            message: "Фамилия должна быть длинной от 2 до 20 символов"
-          }
-        ]}
-      >
-        <Input />
-      </Form.Item>
-
-      <Form.Item<IRegister>
-        label="Почта"
-        name="email"
-        rules={[
-          { required: true, message: "Введите свою почту!" },
-          {
-            pattern: regexPatterns.EMAIL,
-            message: "Введите почту корректно!"
-          }
-        ]}
-      >
-        <Input />
-      </Form.Item>
-
-      <Form.Item<IRegister>
-        label="Телефон"
-        name="phone"
-        rules={[
-          { required: true, message: "Введите свой телефон!" },
-          {
-            min: 3,
-            max: 20,
-            message: "Телефон должен быть длинной от 6 до 20 символов"
-          }
-        ]}
-      >
-        <Input />
+        <Input.Password
+          autoComplete="confirm-password"
+          placeholder="Повторите введенный пароль"
+        />
       </Form.Item>
 
       <SubmitButtonForm />

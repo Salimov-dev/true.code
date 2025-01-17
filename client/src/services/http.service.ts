@@ -5,7 +5,7 @@ import useAuthStore from "@store/auth.store";
 import { validateAndDecodeToken } from "@utils/token/validate-and-decode-token.util";
 
 export const httpService = axios.create({
-  baseURL: config.baseURL,
+  baseURL: `${config.baseURL}api/`,
   params: {},
   withCredentials: true
 });

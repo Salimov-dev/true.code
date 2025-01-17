@@ -2,8 +2,9 @@ import { FC, useState } from "react";
 import { Modal, Segmented } from "antd";
 import LoginForm from "@forms/login/login.form";
 import RegisterForm from "@forms/register/register.form";
-import { Segment } from "@interfaces/auth.interface";
-import { useForm } from "antd/es/form/Form";
+import { ILogin, IRegister, Segment } from "@interfaces/auth.interface";
+import { FormProps, useForm } from "antd/es/form/Form";
+import useAuthStore from "@store/auth.store";
 
 const options = [
   { label: "ВОЙТИ", value: "login" },
@@ -12,15 +13,33 @@ const options = [
 
 interface IProps {
   isModalOpen: boolean;
-  cancelModal: () => void;
+  onCancel: () => void;
 }
 
-const AuthPage: FC<IProps> = ({ isModalOpen, cancelModal }) => {
+const AuthPage: FC<IProps> = ({ isModalOpen, onCancel }) => {
   const [form] = useForm();
   const [segment, setSegment] = useState<Segment>("login");
+  const { login, register } = useAuthStore();
 
   const handleChangeSegment = (value: Segment) => {
     setSegment(value);
+  };
+
+  const handleFinishRegister: FormProps<IRegister>["onFinish"] = async (
+    registerData
+  ) => {
+    register(registerData);
+    form.resetFields();
+    onCancel();
+  };
+
+  const handleFinishLogin: FormProps<ILogin>["onFinish"] = (loginData) => {
+    login(loginData).then((accessToken) => {
+      if (accessToken) {
+        onCancel();
+        form.resetFields();
+      }
+    });
   };
 
   return (
@@ -29,7 +48,7 @@ const AuthPage: FC<IProps> = ({ isModalOpen, cancelModal }) => {
       open={isModalOpen}
       footer={false}
       width="400px"
-      onCancel={cancelModal}
+      onCancel={onCancel}
     >
       <Segmented
         options={options}
@@ -38,9 +57,9 @@ const AuthPage: FC<IProps> = ({ isModalOpen, cancelModal }) => {
       />
 
       {segment === "login" ? (
-        <LoginForm form={form} onCancel={cancelModal} />
+        <LoginForm form={form} onFinish={handleFinishLogin} />
       ) : (
-        <RegisterForm form={form} onCancel={cancelModal} />
+        <RegisterForm form={form} onFinish={handleFinishRegister} />
       )}
     </Modal>
   );

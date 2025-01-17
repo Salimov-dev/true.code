@@ -48,10 +48,9 @@ export class UserService {
         data: userData,
       })
       .catch((err) => {
-        this.logger.error('Ошибка при создании нового пользователя', err);
-        throw new BadRequestException(
-          'Ошибка при создании нового пользователя'
-        );
+        const message = 'Ошибка при создании нового пользователя';
+        this.logger.error(message, err);
+        throw new BadRequestException(message);
       });
     delete newUser.password;
 

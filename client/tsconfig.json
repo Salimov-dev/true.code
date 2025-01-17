@@ -20,7 +20,9 @@
       "@config": ["src/config"],
       "@config/*": ["src/config/*"],
       "@store": ["src/store"],
-      "@store/*": ["src/store/*"]
+      "@store/*": ["src/store/*"],
+      "@hooks": ["src/hooks"],
+      "@hooks/*": ["src/hooks/*"]
     },
     "jsx": "react-jsx",
     "resolveJsonModule": true,

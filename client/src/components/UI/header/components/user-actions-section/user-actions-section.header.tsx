@@ -1,8 +1,8 @@
 import { Flex, Spin } from "antd";
 import styled from "styled-components";
 import { useEffect, useState } from "react";
-import DropdownStyled from "@common/dropdown-styled";
-import useAuthDropdownItems from "./hooks/use-auth-dropdown-items";
+import DropdownStyled from "@common/dropdown/dropdown-styled";
+import useAuthDropdownItems from "@hooks/use-auth-dropdown-items.hook";
 import { IUser } from "@interfaces/user.interface";
 // components
 import AuthButtonHeader from "./components/auth-button.header";
@@ -11,7 +11,7 @@ import AddProductButtonHeader from "./components/add-product-item-button.header"
 import useAuthStore from "@store/auth.store";
 import useUserStore from "@store/user.store";
 
-const RightSideHeader = styled(Flex)`
+const UserActionsWrapper = styled(Flex)`
   gap: 20px;
   align-items: center;
 `;
@@ -40,10 +40,10 @@ const UserHeaderActionsSection = () => {
   return !isAuth ? (
     <AuthButtonHeader />
   ) : (
-    <RightSideHeader>
+    <UserActionsWrapper>
       <AddProductButtonHeader />
       <DropdownStyled items={dropdownItems} title={authUserFullName} />
-    </RightSideHeader>
+    </UserActionsWrapper>
   );
 };
 

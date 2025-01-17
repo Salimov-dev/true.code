@@ -19,7 +19,7 @@ const AuthButtonHeader: FC = (): JSX.Element => {
         Вход
       </Button>
 
-      <AuthPage isModalOpen={isModalOpen} cancelModal={cancelModal} />
+      <AuthPage isModalOpen={isModalOpen} onCancel={cancelModal} />
     </>
   );
 };

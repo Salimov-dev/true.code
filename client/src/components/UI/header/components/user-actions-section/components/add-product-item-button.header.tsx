@@ -1,10 +1,12 @@
 import { Button } from "antd";
 import { FC, useState } from "react";
+import { useForm } from "antd/es/form/Form";
 import { PlusOutlined } from "@ant-design/icons";
-import AddProductItemPage from "@pages/add-product-item/add-product-item.page";
+import AddProductPage from "@pages/add-product/add-product.page";
 
 const AddProductButtonHeader: FC = (): JSX.Element => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [form] = useForm();
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -12,6 +14,7 @@ const AddProductButtonHeader: FC = (): JSX.Element => {
 
   const cancelModal = () => {
     setIsModalOpen(false);
+    form.resetFields();
   };
 
   return (
@@ -25,7 +28,11 @@ const AddProductButtonHeader: FC = (): JSX.Element => {
         Добавить товар
       </Button>
 
-      <AddProductItemPage isModalOpen={isModalOpen} cancelModal={cancelModal} />
+      <AddProductPage
+        form={form}
+        isModalOpen={isModalOpen}
+        onCancel={cancelModal}
+      />
     </>
   );
 };

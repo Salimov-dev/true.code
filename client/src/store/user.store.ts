@@ -47,7 +47,7 @@ const useUserStore = create<IUseUserStore>((set) => ({
       .finally(() => set({ isLoading: false }));
   },
 
-  fetchUserByUsername: (username: string) => {
+  fetchUserByUsername: async (username: string) => {
     set({ isLoading: true, error: null });
     return userService
       .findByUsername(username)
@@ -60,7 +60,7 @@ const useUserStore = create<IUseUserStore>((set) => ({
       .finally(() => set({ isLoading: false }));
   },
 
-  fetchUserByEmail: (email: string) => {
+  fetchUserByEmail: async (email: string) => {
     set({ isLoading: true, error: null });
     return userService
       .findByEmail(email)
@@ -73,7 +73,7 @@ const useUserStore = create<IUseUserStore>((set) => ({
       .finally(() => set({ isLoading: false }));
   },
 
-  fetchUserByPhone: (phone: string) => {
+  fetchUserByPhone: async (phone: string) => {
     set({ isLoading: true, error: null });
     return userService
       .findByPhone(phone)
@@ -86,7 +86,7 @@ const useUserStore = create<IUseUserStore>((set) => ({
       .finally(() => set({ isLoading: false }));
   },
 
-  createUser: (user: Partial<IUser>) => {
+  createUser: async (user: Partial<IUser>) => {
     set({ isLoading: true, error: null });
     return userService
       .create(user)
@@ -102,7 +102,7 @@ const useUserStore = create<IUseUserStore>((set) => ({
       .finally(() => set({ isLoading: false }));
   },
 
-  updateUser: (id: string, user: Partial<IUser>) => {
+  updateUser: async (id: string, user: Partial<IUser>) => {
     set({ isLoading: true, error: null });
     return userService
       .update(id, user)
