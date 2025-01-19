@@ -6,7 +6,8 @@ import useAuthDropdownItems from "@hooks/use-auth-dropdown-items.hook";
 import { IUser } from "@interfaces/user.interface";
 // components
 import AuthButtonHeader from "./components/auth-button.header";
-import AddProductButtonHeader from "./components/add-product-item-button.header";
+import CreateProductButtonHeader from "./components/create-product-item-button.header";
+import ProductsGenerateButton from "../products-generate-button/products-generate-button";
 // store
 import useAuthStore from "@store/auth.store";
 import useUserStore from "@store/user.store";
@@ -41,7 +42,8 @@ const UserHeaderActionsSection = () => {
     <AuthButtonHeader />
   ) : (
     <UserActionsWrapper>
-      <AddProductButtonHeader />
+      <ProductsGenerateButton />
+      <CreateProductButtonHeader />
       <DropdownStyled items={dropdownItems} title={authUserFullName} />
     </UserActionsWrapper>
   );

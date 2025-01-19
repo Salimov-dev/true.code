@@ -5,27 +5,31 @@ import SaveCloseButtons from "@common/buttons/save-cancel-buttons.form";
 import { IProduct } from "@interfaces/product.interface";
 import InputNumberStyled from "@common/inputs/input-number-styled";
 import TextArea from "antd/es/input/TextArea";
-import PicturesWall from "@common/upload/pictures-wall";
+import PicturesWall from "@common/pictures-wall/pictures-wall";
 
 interface IProps {
   form: FormInstance;
   onFinish: (values: IProduct) => void;
   onCancel: () => void;
+  initialValues?: IProduct;
+  setTemporaryImages: (value: string[]) => void;
 }
 
-const AddProductForm: FC<IProps> = ({
+const ProductForm: FC<IProps> = ({
   form,
   onFinish,
-  onCancel
+  onCancel,
+  initialValues,
+  setTemporaryImages
 }): JSX.Element => {
   return (
     <Form
       form={form}
-      name="login"
-      initialValues={{ remember: true }}
+      name="product"
       onFinish={onFinish}
       autoComplete="off"
       style={{ margin: "20px 0 10px 0" }}
+      initialValues={initialValues}
     >
       <Form.Item<IProduct>
         label="Название"
@@ -142,19 +146,12 @@ const AddProductForm: FC<IProps> = ({
         />
       </Form.Item>
 
-      <Form.Item<IProduct>
-        label="Изображение"
-        name="images"
-        // rules={[
-        //   {
-        //     min: 5,
-        //     max: 255,
-        //     message:
-        //       "Длина ссылки на изображение должна быть от 5 до 255 символов"
-        //   }
-        // ]}
-      >
-        <PicturesWall form={form} />
+      <Form.Item<IProduct> label="Изображение" name="images">
+        <PicturesWall
+          form={form}
+          initialValues={initialValues}
+          setTemporaryImages={setTemporaryImages}
+        />
       </Form.Item>
 
       <SaveCloseButtons onClose={onCancel} />
@@ -162,4 +159,4 @@ const AddProductForm: FC<IProps> = ({
   );
 };
 
-export default AddProductForm;
+export default ProductForm;

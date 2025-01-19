@@ -1,5 +1,9 @@
 import { httpService } from "./http.service";
-import { IProduct } from "@interfaces/product.interface";
+import {
+  IProduct,
+  IProductFindWithFilters,
+  IProductFindWithFiltersReturn
+} from "@interfaces/product.interface";
 
 const productEndPoint = "product/";
 
@@ -35,6 +39,37 @@ const productService = {
 
   remove: async (id: string): Promise<void> => {
     await httpService.delete(`${productEndPoint}${id}`);
+  },
+
+  findWithFilters: async ({
+    page = 1,
+    limit = 8,
+    sort = "createdAt",
+    order = "asc",
+    filters = {}
+  }: IProductFindWithFilters): Promise<IProductFindWithFiltersReturn> => {
+    const params = {
+      page,
+      limit,
+      sort,
+      order,
+      filters: JSON.stringify(filters)
+    };
+
+    const { data } = await httpService.get(
+      `${productEndPoint}find-with-filters`,
+      { params }
+    );
+
+    return data;
+  },
+
+  generateRandomProducts: async (limit: number) => {
+    const { data } = await httpService.post(
+      `${productEndPoint}generate-random-products`,
+      { limit }
+    );
+    return data;
   }
 };
 

@@ -1,5 +1,4 @@
 import { Layout } from "antd";
-import "./styles/reset.css";
 import styled from "styled-components";
 import Header from "@UI/header/header";
 import Content from "@UI/content/content";
@@ -8,7 +7,8 @@ import AppLoader from "./hoc/app-loader.hoc";
 
 const Application = styled(Layout)`
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
+  height: 100%;
 `;
 
 function App() {

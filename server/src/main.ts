@@ -4,7 +4,6 @@ import { corsOptions } from '@config/cors-options.config';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import { join } from 'path';
 
 const PORT = process.env.PORT ?? 3000;
 

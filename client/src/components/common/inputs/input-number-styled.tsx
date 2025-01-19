@@ -1,3 +1,5 @@
+import cleanCurrencyValue from "@utils/input/clean-currency-value";
+import formatIntegerWithSpaces from "@utils/input/format-integer-with-spaces";
 import { InputNumber } from "antd";
 import { FC } from "react";
 
@@ -26,17 +28,10 @@ const InputNumberStyled: FC<IProps> = ({
       precision={2}
       placeholder={placeholder}
       formatter={(value) => {
-        if (!value) return "";
-
-        const [integer, decimal] = String(value).split(".");
-        const formattedInteger = integer.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
-
-        return decimal ? `${formattedInteger}.${decimal}` : formattedInteger;
+        return formatIntegerWithSpaces(value);
       }}
       parser={(value) => {
-        if (!value) return "";
-
-        return value.replace(/\s?₽/g, "").replace(/\s/g, "");
+        return cleanCurrencyValue(value);
       }}
     />
   );

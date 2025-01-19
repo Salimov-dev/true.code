@@ -5,9 +5,13 @@ import {
   Logger,
   NotFoundException,
 } from '@nestjs/common';
+import { v4 } from 'uuid';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { PrismaService } from '@prisma/prisma.service';
+import { Prisma, Product } from '@prisma/client';
+import { IProductFindWithFilters } from './interfaces/interfaces';
+import { faker } from '@faker-js/faker';
 
 @Injectable()
 export class ProductService {
@@ -96,5 +100,65 @@ export class ProductService {
       .catch((err) => {
         throw new Error(`Ошибка при удалении товара ${err.message}`);
       });
+  }
+
+  async findWithFilters(
+    params: IProductFindWithFilters
+  ): Promise<{ products: Product[]; total: number }> {
+    const { page, limit, sort, order, filters } = params;
+
+    const whereFilters: Prisma.ProductWhereInput = {};
+
+    if (filters.name) {
+      whereFilters.name = {
+        contains: String(filters.name),
+        mode: 'insensitive',
+      };
+    }
+
+    const products = await this.prismaService.product.findMany({
+      where: whereFilters,
+      orderBy: {
+        [sort]: order,
+      },
+      skip: (page - 1) * limit,
+      take: limit,
+    });
+
+    const total = await this.prismaService.product.count({
+      where: whereFilters,
+    });
+
+    return { products, total };
+  }
+
+  async generateRandomProducts(
+    userId: string,
+    productQuantity: number
+  ): Promise<Prisma.ProductCreateManyInput[]> {
+    const products: Prisma.ProductCreateManyInput[] = [];
+
+    for (let i = 0; i < productQuantity; i++) {
+      const product: Prisma.ProductCreateManyInput = {
+        id: v4(),
+        name: `${faker.commerce.productAdjective()} ${faker.commerce.product()}`,
+        description: faker.commerce.productDescription(),
+        price: parseFloat(
+          faker.commerce.price({ min: 10000, max: 50000, dec: 2 })
+        ),
+        discountPrice: parseFloat(
+          faker.commerce.price({ min: 5000, max: 20000, dec: 2 })
+        ),
+        sku: v4().slice(0, 8),
+        images: [],
+        userId: userId,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+
+      products.push(product);
+    }
+
+    return products;
   }
 }

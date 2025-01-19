@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Post,
   UploadedFile,
@@ -20,5 +21,17 @@ export class UploadController {
   uploadFile(@UploadedFile() file: Express.Multer.File) {
     const fileUrl = `uploads/${file.filename}`;
     return { url: fileUrl };
+  }
+
+  @Post('delete')
+  async deleteFile(@Body() body: { fileUrl: string }) {
+    const { fileUrl } = body;
+
+    try {
+      const result = await this.uploadService.deleteFile(fileUrl);
+      return result;
+    } catch (error) {
+      throw new Error(`Не удалось удалить файл: ${error.message}`);
+    }
   }
 }
