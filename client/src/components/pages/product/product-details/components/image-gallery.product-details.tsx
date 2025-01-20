@@ -8,13 +8,16 @@ interface IProps {
 }
 
 const ImageGalleryProductDetails: FC<IProps> = ({ product }): JSX.Element => {
+  const hasImages = product.images.length;
   return (
     <Flex vertical style={{ marginTop: "20px" }}>
-      <Typography.Text
-        style={{ fontWeight: "bold", width: "100%", textAlign: "center" }}
-      >
-        Галерея изображений:
-      </Typography.Text>
+      {hasImages ? (
+        <Typography.Text
+          style={{ fontWeight: "bold", width: "100%", textAlign: "center" }}
+        >
+          Галерея изображений:
+        </Typography.Text>
+      ) : null}
       <Row gutter={[16, 16]}>
         {product.images.map((image: string, index: number) => (
           <Col span={8} key={index}>

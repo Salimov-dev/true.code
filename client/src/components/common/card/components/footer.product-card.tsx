@@ -43,8 +43,7 @@ const FooterProductCard: FC<IProps> = ({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<IProduct | null>(null);
   const [temporaryImages, setTemporaryImages] = useState<string[]>([]);
-  const { deleteProduct, fetchProductsWithFilters, products } =
-    useProductStore();
+  const { deleteProduct, products, total } = useProductStore();
 
   const [form] = useForm();
 
@@ -92,8 +91,6 @@ const FooterProductCard: FC<IProps> = ({
       okText: "Удалить",
       cancelText: "Отмена",
       onOk: async () => {
-        console.log("products", products);
-
         const newPage =
           products.length === 1 && currentPage > 1
             ? currentPage - 1

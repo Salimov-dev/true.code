@@ -17,29 +17,27 @@ const Component = styled(Layout.Content)`
 `;
 
 const Content: FC = (): JSX.Element => {
-  const {
-    products,
-    total,
-    isLoadingFetchProductsWithFilters,
-    isLoadingGenerateRandomProducts
-  } = useProductStore();
-
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalQuantity, setTotalQuantity] = useState(null);
+  const [totalQuantity, setTotalQuantity] = useState(0);
   const [pageSize, setPageSize] = useState(DEFAULT_PAGINATION.limit);
   const [sort, setSort] = useState(DEFAULT_PAGINATION.sort);
   const [order, setOrder] = useState<"asc" | "desc" | undefined>(null);
   const [searchName, setSearchName] = useState<string | undefined>();
 
+  const { products, total, isLoadingFetchProductsWithFilters } =
+    useProductStore();
+
   useEffect(() => {
-    if (total && products) setTotalQuantity(total);
+    if (total && products) {
+      setTotalQuantity(total);
+    }
   }, [total, products]);
 
   return (
     <Component>
       <FiltersPanelProductGrid
         totalQuantity={totalQuantity}
-        isLoading={isLoadingGenerateRandomProducts}
+        isLoading={isLoadingFetchProductsWithFilters}
         pageSize={pageSize}
         order={order}
         sort={sort}

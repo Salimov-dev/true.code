@@ -52,7 +52,7 @@ const FiltersPanelProductGrid: FC<FiltersPanelProductGridProps> = ({
   setSort,
   setSearchName
 }): JSX.Element => {
-  const { fetchProductsWithFilters } = useProductStore();
+  const { fetchProductsWithFilters, total } = useProductStore();
 
   const handleSortChange = (value: string | undefined) => {
     const order = value === "none" ? undefined : (value as "asc" | "desc");
@@ -96,11 +96,12 @@ const FiltersPanelProductGrid: FC<FiltersPanelProductGridProps> = ({
     setSearchName(name);
     debouncedSearch(name);
   };
+
   return (
     <Component>
       <Typography.Text>
         Всего товаров: {""}
-        {isLoading || !totalQuantity ? <Spin /> : `${totalQuantity} шт`}
+        {isLoading ? <Spin /> : `${total} шт`}
       </Typography.Text>
 
       <FilterAndSortContainer>

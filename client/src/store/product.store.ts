@@ -114,13 +114,15 @@ const useProductStore = create<IUseProductStore>((set) => ({
         productService
           .findWithFilters(filters)
           .then(({ products, total }) => {
+            console.log("total", total);
+
             set({ products, total });
           })
           .catch((error) => {
             handleHttpError(error, "Ошибка при загрузке товаров с фильтрами");
             set({ error });
           })
-          .finally(() => set({ isLoadingFetchProductsWithFilters: false }));
+          .finally(() => set({ isLoading: false }));
       })
       .catch((error) => {
         handleHttpError(error, "Ошибка при удалении товара");
@@ -160,6 +162,18 @@ const useProductStore = create<IUseProductStore>((set) => ({
               ? [...state.products, ...createdProducts]
               : state.products
         }));
+
+        productService
+          .findWithFilters(DEFAULT_PAGINATION)
+          .then(({ products, total }) => {
+            set({ products, total });
+          })
+          .catch((error) => {
+            handleHttpError(error, "Ошибка при загрузке товаров с фильтрами");
+            set({ error });
+          })
+          .finally(() => set({ isLoading: false }));
+
         notification.success({
           message: "Товары успешно сгенерированы",
           description: `Сгенерировано ${count} шт`
