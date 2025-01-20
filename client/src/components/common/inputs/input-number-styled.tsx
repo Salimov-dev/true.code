@@ -28,10 +28,10 @@ const InputNumberStyled: FC<IProps> = ({
       precision={2}
       placeholder={placeholder}
       formatter={(value) => {
-        return formatIntegerWithSpaces(value);
+        return formatIntegerWithSpaces(value || "");
       }}
       parser={(value) => {
-        return cleanCurrencyValue(value);
+        return Number(cleanCurrencyValue(String(value)));
       }}
     />
   );

@@ -1,4 +1,4 @@
-import { Button } from "antd";
+import { Button, notification } from "antd";
 import { FC, useState } from "react";
 import { useForm } from "antd/es/form/Form";
 import { PlusOutlined } from "@ant-design/icons";
@@ -14,20 +14,32 @@ const CreateProductButtonHeader: FC = (): JSX.Element => {
     setIsModalOpen(true);
   };
 
-  const cancelModal = async () => {
+  const handleCancel = async () => {
     try {
       await Promise.all(
         temporaryImages.map(async (url) => {
           const res = await uploadService.deleteFile(url);
-          console.log(`Удалено временное изображение: ${res.fileUrl}`);
+          notification.success({
+            message: "Успешное удаление изображения",
+            description: `Удалено временное изображение: ${res.fileUrl}`
+          });
         })
       );
-      setIsModalOpen(false);
-      form.resetFields();
       setTemporaryImages([]);
     } catch (error) {
-      console.error("Ошибка при удалении временных изображений:", error);
+      notification.error({
+        message: `Ошибка при удалении временных изображений ${error}`
+      });
+    } finally {
+      setIsModalOpen(false);
+      form.resetFields();
     }
+  };
+
+  const handleSave = () => {
+    setIsModalOpen(false);
+    form.resetFields();
+    setTemporaryImages([]);
   };
 
   return (
@@ -44,7 +56,8 @@ const CreateProductButtonHeader: FC = (): JSX.Element => {
       <CreateProductPage
         form={form}
         isModalOpen={isModalOpen}
-        onCancel={cancelModal}
+        onCancel={handleCancel}
+        onSave={handleSave}
         setTemporaryImages={setTemporaryImages}
       />
     </>

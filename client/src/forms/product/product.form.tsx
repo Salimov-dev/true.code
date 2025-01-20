@@ -11,7 +11,7 @@ interface IProps {
   form: FormInstance;
   onFinish: (values: IProduct) => void;
   onCancel: () => void;
-  initialValues?: IProduct;
+  initialValues?: IProduct | null;
   setTemporaryImages: (value: string[]) => void;
 }
 
@@ -29,7 +29,7 @@ const ProductForm: FC<IProps> = ({
       onFinish={onFinish}
       autoComplete="off"
       style={{ margin: "20px 0 10px 0" }}
-      initialValues={initialValues}
+      initialValues={initialValues || {}}
     >
       <Form.Item<IProduct>
         label="Название"

@@ -9,6 +9,12 @@ const __dirname = dirname(__filename);
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
+  build: {
+    outDir: "dist",
+    rollupOptions: {
+      input: "index.html"
+    }
+  },
   resolve: {
     alias: {
       "@interfaces": path.resolve(__dirname, "./src/interfaces"),

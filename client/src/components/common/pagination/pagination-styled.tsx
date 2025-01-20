@@ -1,7 +1,6 @@
 import { IProductFindWithFilters } from "@interfaces/product.interface";
 import { Pagination } from "antd";
 import styled from "styled-components";
-import config from "@config/config.json";
 import useProductStore from "@store/product.store";
 import { DEFAULT_PAGINATION } from "@config/pagination.config";
 
@@ -41,7 +40,7 @@ const PaginationStyled = ({
       limit: DEFAULT_PAGINATION.limit,
       sort,
       order,
-      filters: { name: searchName }
+      filters: { name: searchName || "" }
     };
 
     setCurrentPage(page);
@@ -54,7 +53,7 @@ const PaginationStyled = ({
       limit: size,
       sort,
       order,
-      filters: { name: searchName }
+      filters: { name: searchName || "" }
     };
 
     setPageSize(size);

@@ -49,6 +49,7 @@ const usePictureWall = ({
         const url = response.url;
         const images = form.getFieldValue("images") || [];
         const newImages = [...images, url];
+
         form.setFieldsValue({ images: newImages });
 
         setTemporaryImages((prev) => [...prev, url]);

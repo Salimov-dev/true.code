@@ -13,6 +13,7 @@ interface IProps {
   product: IProduct;
   setCurrentPage: (page: number | ((prev: number) => number)) => void;
   pageSize: number;
+  currentPage: number;
   sort: string;
   searchName: string;
   order: "asc" | "desc" | undefined;
@@ -35,6 +36,7 @@ const ProductCard: FC<IProps> = ({
   pageSize,
   sort,
   searchName,
+  currentPage,
   order
 }): JSX.Element => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -60,6 +62,7 @@ const ProductCard: FC<IProps> = ({
             <ContentProductCard product={product} />
             <FooterProductCard
               product={product}
+              currentPage={currentPage}
               setCurrentPage={setCurrentPage}
               pageSize={pageSize}
               sort={sort}

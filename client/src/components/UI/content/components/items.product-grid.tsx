@@ -7,6 +7,7 @@ interface ProductGridItemsProps {
   products: IProduct[];
   setCurrentPage: (page: number | ((prev: number) => number)) => void;
   pageSize: number;
+  currentPage: number;
   sort: string;
   searchName: string;
   order: "asc" | "desc" | undefined;
@@ -21,6 +22,7 @@ const ProductGridItems = ({
   products,
   setCurrentPage,
   pageSize,
+  currentPage,
   sort,
   order,
   searchName
@@ -31,6 +33,7 @@ const ProductGridItems = ({
         <ColWrapper key={product.id} xs={24} sm={12} md={12} lg={8} xl={6}>
           <ProductCard
             product={product}
+            currentPage={currentPage}
             setCurrentPage={setCurrentPage}
             pageSize={pageSize}
             sort={sort}

@@ -9,10 +9,18 @@ import { ConfigProvider } from "antd";
 import "../styles/reset.css";
 // utils
 import setAuthAndUserData from "@utils/auth/set-auth-and-user-data.util";
+import useProductStore from "@store/product.store";
+import { DEFAULT_PAGINATION } from "@config/pagination.config";
 
 const AppLoader = ({ children }) => {
   dayjs.locale("ru");
   const accessToken = localStorage.getItem("token");
+
+  const { fetchProductsWithFilters } = useProductStore();
+
+  useEffect(() => {
+    fetchProductsWithFilters(DEFAULT_PAGINATION);
+  }, [fetchProductsWithFilters]);
 
   useEffect(() => {
     setAuthAndUserData();

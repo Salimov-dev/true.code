@@ -15,7 +15,7 @@ const FooterActionButtonsProductCard: FC<IProps> = ({
   onUpdateProduct,
   onDeleteProduct,
   product
-}): JSX.Element => {
+}): JSX.Element | null => {
   const { isAuth } = useAuthStore();
 
   return isAuth ? (

@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { useForm } from "antd/es/form/Form";
-import { Flex, Modal, Typography } from "antd";
+import { Flex, Modal, notification, Typography } from "antd";
 import { FC, useEffect, useState } from "react";
 import { IProduct } from "@interfaces/product.interface";
 import UpdateProductPage from "@pages/product/update-product/update-product.page";
@@ -12,6 +12,7 @@ interface IProps {
   product: IProduct;
   setCurrentPage: (page: number | ((prev: number) => number)) => void;
   pageSize: number;
+  currentPage: number;
   sort: string;
   searchName: string;
   order: "asc" | "desc" | undefined;
@@ -36,12 +37,12 @@ const FooterProductCard: FC<IProps> = ({
   pageSize,
   sort,
   order,
+  currentPage,
   searchName
 }): JSX.Element => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [selectedProduct, setSelectedProduct] = useState<IProduct | null>(null);
   const [temporaryImages, setTemporaryImages] = useState<string[]>([]);
-
   const { deleteProduct, fetchProductsWithFilters, products } =
     useProductStore();
 
@@ -51,20 +52,32 @@ const FooterProductCard: FC<IProps> = ({
     setIsModalOpen(true);
   };
 
-  const cancelModal = async () => {
+  const handleCancel = async () => {
     try {
       await Promise.all(
         temporaryImages.map(async (url) => {
           const res = await uploadService.deleteFile(url);
-          console.log(`Удалено временное изображение: ${res.fileUrl}`);
+          notification.success({
+            message: "Успешное удаление изображения",
+            description: `Удалено временное изображение: ${res.fileUrl}`
+          });
         })
       );
-      setIsModalOpen(false);
-      form.resetFields();
       setTemporaryImages([]);
     } catch (error) {
-      console.error("Ошибка при удалении временных изображений:", error);
+      notification.error({
+        message: `Ошибка при удалении временных изображений ${error}`
+      });
+    } finally {
+      setIsModalOpen(false);
+      form.resetFields();
     }
+  };
+
+  const handleSave = () => {
+    setIsModalOpen(false);
+    form.resetFields();
+    setTemporaryImages([]);
   };
 
   const handleUpdateProduct = (product: IProduct) => {
@@ -79,22 +92,29 @@ const FooterProductCard: FC<IProps> = ({
       okText: "Удалить",
       cancelText: "Отмена",
       onOk: async () => {
-        deleteProduct(productId);
+        console.log("products", products);
 
-        setCurrentPage((prev: number) => {
-          const newPage = products.length === 1 && prev > 1 ? prev - 1 : prev;
-          fetchProductsWithFilters({
-            page: newPage,
-            limit: pageSize,
-            sort,
-            order,
-            filters: { name: searchName }
-          });
-          return newPage;
-        });
+        const newPage =
+          products.length === 1 && currentPage > 1
+            ? currentPage - 1
+            : currentPage;
+
+        const filters = {
+          page: newPage,
+          limit: pageSize,
+          sort,
+          order,
+          filters: { name: searchName }
+        };
+
+        deleteProduct(productId, filters);
+
+        setCurrentPage(newPage);
       },
       onCancel() {
-        console.log("Удаление отменено");
+        notification.error({
+          message: `Ошибка при удалении продукта`
+        });
       }
     });
   };
@@ -115,7 +135,9 @@ const FooterProductCard: FC<IProps> = ({
       <UpdateProductPage
         form={form}
         isModalOpen={isModalOpen}
-        onCancel={cancelModal}
+        onCancel={handleCancel}
+        onSave={handleSave}
+        temporaryImages={temporaryImages}
         initialValues={selectedProduct}
         setIsModalOpen={setIsModalOpen}
         setSelectedProduct={setSelectedProduct}

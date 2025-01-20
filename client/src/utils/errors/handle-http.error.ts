@@ -16,9 +16,9 @@ export const handleHttpError = (
   let errorMessage = defaultMessage;
 
   if (error instanceof AxiosError) {
-    const responseErrorMessage = error.response.data.message;
+    if (error.response?.data?.message) {
+      const responseErrorMessage = error.response.data.message;
 
-    if (responseErrorMessage) {
       errorMessage = Array.isArray(responseErrorMessage)
         ? responseErrorMessage.join(", ")
         : responseErrorMessage;

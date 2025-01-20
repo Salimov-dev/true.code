@@ -9,7 +9,9 @@ interface IProps {
   form: FormInstance;
   isModalOpen: boolean;
   onCancel: () => void;
-  initialValues: IProduct;
+  onSave: () => void;
+  initialValues: IProduct | null;
+  temporaryImages: string[];
   setSelectedProduct: (value: IProduct) => void;
   setTemporaryImages: (value: string[]) => void;
   setIsModalOpen: (value: boolean) => void;
@@ -19,7 +21,9 @@ const UpdateProductPage: FC<IProps> = ({
   form,
   isModalOpen,
   onCancel,
+  onSave,
   setIsModalOpen,
+  temporaryImages,
   setSelectedProduct,
   setTemporaryImages,
   initialValues
@@ -33,7 +37,8 @@ const UpdateProductPage: FC<IProps> = ({
 
     const formattedProduct = {
       ...updatedProduct,
-      userId: initialValues.userId
+      userId: initialValues.userId,
+      images: [...(initialValues.images || []), ...temporaryImages]
     };
 
     updateProduct(initialValues.id, formattedProduct);
@@ -51,7 +56,7 @@ const UpdateProductPage: FC<IProps> = ({
       open={isModalOpen}
       footer={false}
       width="500px"
-      onCancel={onCancel}
+      onCancel={onSave}
       maskClosable={false}
     >
       <ProductForm

@@ -20,6 +20,6 @@ export interface IAccessDecodedToken {
   userName: string;
   email: string;
   role: Role[];
-  exp: number;
-  iat: number;
+  exp?: number;
+  iat?: number;
 }

@@ -19,7 +19,7 @@ interface IUseProductStore {
   fetchProductById: (id: string) => Promise<IProduct | null>;
   createProduct: (Product: Partial<IProduct>) => Promise<IProduct>;
   updateProduct: (id: string, product: Partial<IProduct>) => Promise<IProduct>;
-  deleteProduct: (id: string) => void;
+  deleteProduct: (id: string, filters: IProductFindWithFilters) => void;
   fetchProductsWithFilters: (filters: IProductFindWithFilters) => void;
   generateRandomProducts: () => void;
 }
@@ -63,7 +63,12 @@ const useProductStore = create<IUseProductStore>((set) => ({
       .create(product)
       .then((newProduct) => {
         set((state) => ({
-          products: [newProduct, ...state.products.slice(0, -1)],
+          products: [
+            newProduct,
+            ...(state.total > DEFAULT_PAGINATION.limit
+              ? state.products.slice(0, -1)
+              : state.products)
+          ],
           total: state.total + 1
         }));
 
@@ -101,15 +106,21 @@ const useProductStore = create<IUseProductStore>((set) => ({
       .finally(() => set({ isLoading: false }));
   },
 
-  deleteProduct: (id: string) => {
+  deleteProduct: (id: string, filters) => {
     set({ isLoading: true, error: null });
     productService
       .remove(id)
       .then(() => {
-        set((state) => ({
-          products: state.products.filter((product) => product.id !== id),
-          total: state.total - 1
-        }));
+        productService
+          .findWithFilters(filters)
+          .then(({ products, total }) => {
+            set({ products, total });
+          })
+          .catch((error) => {
+            handleHttpError(error, "Ошибка при загрузке товаров с фильтрами");
+            set({ error });
+          })
+          .finally(() => set({ isLoadingFetchProductsWithFilters: false }));
       })
       .catch((error) => {
         handleHttpError(error, "Ошибка при удалении товара");

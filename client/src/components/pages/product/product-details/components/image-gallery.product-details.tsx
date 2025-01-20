@@ -16,7 +16,7 @@ const ImageGalleryProductDetails: FC<IProps> = ({ product }): JSX.Element => {
         Галерея изображений:
       </Typography.Text>
       <Row gutter={[16, 16]}>
-        {product.images.map((image, index) => (
+        {product.images.map((image: string, index: number) => (
           <Col span={8} key={index}>
             <Image
               width="100%"

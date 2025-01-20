@@ -7,6 +7,7 @@ import ProductGridItems from "./items.product-grid";
 interface ProductGridProps {
   products: IProduct[];
   totalQuantity: number;
+  currentPage: number;
   isLoading: boolean;
   setCurrentPage: (page: number | ((prev: number) => number)) => void;
   pageSize: number;
@@ -31,6 +32,7 @@ const ProductGrid = ({
   pageSize,
   sort,
   searchName,
+  currentPage,
   order
 }: ProductGridProps) => {
   return !isLoading ? (
@@ -40,6 +42,7 @@ const ProductGrid = ({
         setCurrentPage={setCurrentPage}
         pageSize={pageSize}
         sort={sort}
+        currentPage={currentPage}
         order={order}
         searchName={searchName}
       />

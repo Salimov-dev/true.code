@@ -18,7 +18,6 @@ const Component = styled(Layout.Content)`
 
 const Content: FC = (): JSX.Element => {
   const {
-    fetchProductsWithFilters,
     products,
     total,
     isLoadingFetchProductsWithFilters,
@@ -26,15 +25,11 @@ const Content: FC = (): JSX.Element => {
   } = useProductStore();
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalQuantity, setTotalQuantity] = useState(total);
+  const [totalQuantity, setTotalQuantity] = useState(null);
   const [pageSize, setPageSize] = useState(DEFAULT_PAGINATION.limit);
   const [sort, setSort] = useState(DEFAULT_PAGINATION.sort);
   const [order, setOrder] = useState<"asc" | "desc" | undefined>(null);
   const [searchName, setSearchName] = useState<string | undefined>();
-
-  useEffect(() => {
-    fetchProductsWithFilters(DEFAULT_PAGINATION);
-  }, [fetchProductsWithFilters]);
 
   useEffect(() => {
     if (total && products) setTotalQuantity(total);
@@ -57,6 +52,7 @@ const Content: FC = (): JSX.Element => {
 
       <ProductGrid
         products={products}
+        currentPage={currentPage}
         totalQuantity={total}
         isLoading={isLoadingFetchProductsWithFilters}
         setCurrentPage={setCurrentPage}
