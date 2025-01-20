@@ -1,12 +1,12 @@
 import { Flex, Spin } from "antd";
 import styled from "styled-components";
-import { useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import DropdownStyled from "@common/dropdown/dropdown-styled";
 import useAuthDropdownItems from "@hooks/use-auth-dropdown-items.hook";
 import { IUser } from "@interfaces/user.interface";
 // components
 import AuthButtonHeader from "./components/auth-button.header";
-import CreateProductButtonHeader from "./components/create-product-item-button.header";
+import CreateProductButtonHeader from "./components/create-product-button.header";
 import ProductsGenerateButton from "../products-generate-button/products-generate-button";
 // store
 import useAuthStore from "@store/auth.store";
@@ -17,7 +17,7 @@ const UserActionsWrapper = styled(Flex)`
   align-items: center;
 `;
 
-const UserHeaderActionsSection = () => {
+const UserHeaderActionsSection: FC = (): JSX.Element => {
   const [userData, setUserData] = useState<IUser>();
 
   const { isAuth, authUser } = useAuthStore();

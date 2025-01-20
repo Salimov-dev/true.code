@@ -17,7 +17,7 @@ const InputNumberStyled: FC<IProps> = ({
   placeholder,
   value,
   onChange
-}) => {
+}): JSX.Element => {
   return (
     <InputNumber
       value={value}

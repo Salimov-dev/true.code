@@ -27,7 +27,6 @@ export class TokenService {
       })
       .catch(() => null);
 
-    // Проверка, если токен не найден
     if (!token) {
       throw new UnauthorizedException('Refresh token not found');
     }

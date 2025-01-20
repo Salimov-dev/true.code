@@ -1,12 +1,12 @@
 import { create } from "zustand";
+import { notification } from "antd";
 import { handleHttpError } from "@utils/errors/handle-http.error";
+import productService from "@services/product.service";
+import { DEFAULT_PAGINATION } from "@config/pagination.config";
 import {
   IProduct,
   IProductFindWithFilters
 } from "@interfaces/product.interface";
-import productService from "@services/product.service";
-import { notification } from "antd";
-import config from "@config/config.json";
 
 interface IUseProductStore {
   products: IProduct[];
@@ -62,7 +62,11 @@ const useProductStore = create<IUseProductStore>((set) => ({
     return productService
       .create(product)
       .then((newProduct) => {
-        set((state) => ({ products: [...state.products, newProduct] }));
+        set((state) => ({
+          products: [newProduct, ...state.products.slice(0, -1)],
+          total: state.total + 1
+        }));
+
         notification.success({
           message: "Товар успешно добавлен",
           description: `Товар под именем ${newProduct.name} создан`
@@ -103,7 +107,8 @@ const useProductStore = create<IUseProductStore>((set) => ({
       .remove(id)
       .then(() => {
         set((state) => ({
-          products: state.products.filter((product) => product.id !== id)
+          products: state.products.filter((product) => product.id !== id),
+          total: state.total - 1
         }));
       })
       .catch((error) => {
@@ -131,7 +136,7 @@ const useProductStore = create<IUseProductStore>((set) => ({
   generateRandomProducts: async () => {
     set({ isLoadingGenerateRandomProducts: true, error: null });
 
-    const limit = config.defaultPagination.limit;
+    const limit = DEFAULT_PAGINATION.limit;
 
     productService
       .generateRandomProducts(limit)

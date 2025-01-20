@@ -1,13 +1,11 @@
-import { debounce } from "lodash";
-import { useEffect, useState, useCallback } from "react";
-import useProductStore from "@store/product.store";
-import { Flex, Input, Layout, Select, Spin, Typography } from "antd";
+import { FC, useEffect, useState } from "react";
+import { Layout } from "antd";
 import styled from "styled-components";
 import ProductGrid from "./components/product-grid";
 import PaginationStyled from "@common/pagination/pagination-styled";
-import { IProductFindWithFilters } from "@interfaces/product.interface";
-import config from "@config/config.json";
 import FiltersPanelProductGrid from "./components/filters-panel.product-grid";
+import useProductStore from "@store/product.store";
+import { DEFAULT_PAGINATION } from "@config/pagination.config";
 
 const Component = styled(Layout.Content)`
   text-align: center;
@@ -18,12 +16,7 @@ const Component = styled(Layout.Content)`
   padding: 20px;
 `;
 
-const DEFAULT_PAGINATION: IProductFindWithFilters = {
-  ...config.defaultPagination,
-  order: config.defaultPagination.order as "desc" | "asc"
-};
-
-const Content = () => {
+const Content: FC = (): JSX.Element => {
   const {
     fetchProductsWithFilters,
     products,
@@ -34,35 +27,10 @@ const Content = () => {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [totalQuantity, setTotalQuantity] = useState(total);
-  const [pageSize, setPageSize] = useState(config.defaultPagination.limit);
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc" | undefined>();
+  const [pageSize, setPageSize] = useState(DEFAULT_PAGINATION.limit);
+  const [sort, setSort] = useState(DEFAULT_PAGINATION.sort);
+  const [order, setOrder] = useState<"asc" | "desc" | undefined>(null);
   const [searchName, setSearchName] = useState<string | undefined>();
-
-  const handlePageChange = (page: number) => {
-    const newPaginationParams: IProductFindWithFilters = {
-      page,
-      limit: config.defaultPagination.limit,
-      sort: sortOrder ? "name" : undefined,
-      order: sortOrder,
-      filters: { name: searchName }
-    };
-
-    setCurrentPage(page);
-    fetchProductsWithFilters(newPaginationParams);
-  };
-
-  const handlePageSizeChange = (current: number, size: number) => {
-    const newPaginationParams: IProductFindWithFilters = {
-      page: current,
-      limit: size,
-      sort: sortOrder ? "name" : undefined,
-      order: sortOrder,
-      filters: { name: searchName }
-    };
-
-    setPageSize(size);
-    fetchProductsWithFilters(newPaginationParams);
-  };
 
   useEffect(() => {
     fetchProductsWithFilters(DEFAULT_PAGINATION);
@@ -77,20 +45,36 @@ const Content = () => {
       <FiltersPanelProductGrid
         totalQuantity={totalQuantity}
         isLoading={isLoadingGenerateRandomProducts}
+        pageSize={pageSize}
+        order={order}
+        sort={sort}
+        setSort={setSort}
+        searchName={searchName}
+        setOrder={setOrder}
+        setCurrentPage={setCurrentPage}
+        setSearchName={setSearchName}
       />
 
       <ProductGrid
         products={products}
         totalQuantity={total}
         isLoading={isLoadingFetchProductsWithFilters}
+        setCurrentPage={setCurrentPage}
+        pageSize={pageSize}
+        sort={sort}
+        order={order}
+        searchName={searchName}
       />
 
       <PaginationStyled
+        searchName={searchName}
         current={currentPage}
-        total={totalQuantity}
-        onPageChange={handlePageChange}
+        total={total}
         pageSize={pageSize}
-        onPageSizeChange={handlePageSizeChange}
+        sort={sort}
+        order={order}
+        setPageSize={setPageSize}
+        setCurrentPage={setCurrentPage}
       />
     </Component>
   );

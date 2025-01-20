@@ -1,5 +1,20 @@
+import { IProductFindWithFilters } from "@interfaces/product.interface";
 import { Pagination } from "antd";
 import styled from "styled-components";
+import config from "@config/config.json";
+import useProductStore from "@store/product.store";
+import { DEFAULT_PAGINATION } from "@config/pagination.config";
+
+interface PaginationStyledProps {
+  searchName: string | undefined;
+  current: number;
+  total: number;
+  pageSize: number;
+  sort: string;
+  order: "asc" | "desc" | undefined;
+  setPageSize: (size: number) => void;
+  setCurrentPage: (page: number) => void;
+}
 
 const Component = styled(Pagination)`
   width: 100%;
@@ -8,30 +23,54 @@ const Component = styled(Pagination)`
   margin: 50px 0 10px 0;
 `;
 
-interface PaginationStyledProps {
-  current: number;
-  total: number;
-  onPageChange: (page: number) => void;
-  pageSize: number;
-  onPageSizeChange: (current: number, size: number) => void;
-}
+const PAGE_SIZE_OPTIONS = ["8", "16", "32", "64"];
 
 const PaginationStyled = ({
+  searchName,
   current,
-  total,
-  onPageChange,
   pageSize,
-  onPageSizeChange
+  sort,
+  order,
+  setPageSize,
+  setCurrentPage
 }: PaginationStyledProps) => {
+  const { fetchProductsWithFilters, total } = useProductStore();
+  const handlePageChange = (page: number) => {
+    const newPaginationParams: IProductFindWithFilters = {
+      page,
+      limit: DEFAULT_PAGINATION.limit,
+      sort,
+      order,
+      filters: { name: searchName }
+    };
+
+    setCurrentPage(page);
+    fetchProductsWithFilters(newPaginationParams);
+  };
+
+  const handlePageSizeChange = (current: number, size: number) => {
+    const newPaginationParams: IProductFindWithFilters = {
+      page: current,
+      limit: size,
+      sort,
+      order,
+      filters: { name: searchName }
+    };
+
+    setPageSize(size);
+    fetchProductsWithFilters(newPaginationParams);
+  };
+
   return total ? (
     <Component
       defaultCurrent={1}
       current={current}
       total={total}
       pageSize={pageSize}
-      onChange={onPageChange}
+      onChange={handlePageChange}
       showSizeChanger={true}
-      onShowSizeChange={onPageSizeChange}
+      onShowSizeChange={handlePageSizeChange}
+      pageSizeOptions={PAGE_SIZE_OPTIONS}
     />
   ) : null;
 };

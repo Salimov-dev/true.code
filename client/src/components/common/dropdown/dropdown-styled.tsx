@@ -7,7 +7,7 @@ interface IProps {
   title: string | JSX.Element;
 }
 
-const DropdownStyled: FC<IProps> = ({ items, title }) => {
+const DropdownStyled: FC<IProps> = ({ items, title }): JSX.Element => {
   const [hovered, setHovered] = useState(false);
 
   return (

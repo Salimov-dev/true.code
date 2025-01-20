@@ -16,7 +16,7 @@ interface IProps {
   onCancel: () => void;
 }
 
-const AuthPage: FC<IProps> = ({ isModalOpen, onCancel }) => {
+const AuthPage: FC<IProps> = ({ isModalOpen, onCancel }): JSX.Element => {
   const [form] = useForm();
   const [segment, setSegment] = useState<Segment>("login");
   const { login, register } = useAuthStore();

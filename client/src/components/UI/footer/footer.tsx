@@ -1,4 +1,5 @@
 import { Layout } from "antd";
+import { FC } from "react";
 import styled from "styled-components";
 
 const Component = styled(Layout.Footer)`
@@ -7,7 +8,7 @@ const Component = styled(Layout.Footer)`
   background-color: #4096ff;
 `;
 
-const Footer = () => {
+const Footer: FC = (): JSX.Element => {
   return <Component>Footer</Component>;
 };
 

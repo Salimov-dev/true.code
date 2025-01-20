@@ -1,11 +1,19 @@
 import { Image } from "antd";
+import { FC } from "react";
 
-const PreviewImagePictureWall = ({
+interface IProps {
+  previewImage: string;
+  previewOpen: boolean;
+  setPreviewOpen: (visible: boolean) => void;
+  setPreviewImage: (image: string) => void;
+}
+
+const PreviewImagePictureWall: FC<IProps> = ({
   previewImage,
   previewOpen,
   setPreviewOpen,
   setPreviewImage
-}) => {
+}): JSX.Element => {
   return (
     previewImage && (
       <Image

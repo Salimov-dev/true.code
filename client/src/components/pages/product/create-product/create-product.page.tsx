@@ -9,12 +9,14 @@ interface IProps {
   form: FormInstance;
   isModalOpen: boolean;
   onCancel: () => void;
+  setTemporaryImages: (value: string[]) => void;
 }
 
 const CreateProductPage: FC<IProps> = ({
   form,
   isModalOpen,
-  onCancel
+  onCancel,
+  setTemporaryImages
 }): JSX.Element => {
   const { createProduct } = useProductStore();
 
@@ -32,7 +34,12 @@ const CreateProductPage: FC<IProps> = ({
       width="500px"
       onCancel={onCancel}
     >
-      <ProductForm form={form} onFinish={handleFinish} onCancel={onCancel} />
+      <ProductForm
+        form={form}
+        onFinish={handleFinish}
+        onCancel={onCancel}
+        setTemporaryImages={setTemporaryImages}
+      />
     </Modal>
   );
 };

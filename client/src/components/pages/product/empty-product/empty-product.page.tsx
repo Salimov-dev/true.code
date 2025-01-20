@@ -1,5 +1,6 @@
 import { FrownOutlined } from "@ant-design/icons";
 import { Flex, Typography } from "antd";
+import { FC } from "react";
 import styled from "styled-components";
 
 const Component = styled(Flex)`
@@ -10,7 +11,7 @@ const Component = styled(Flex)`
   color: black;
 `;
 
-const EmptyProductsPage = () => {
+const EmptyProductsPage: FC = (): JSX.Element => {
   return (
     <Component vertical>
       <Typography.Title>

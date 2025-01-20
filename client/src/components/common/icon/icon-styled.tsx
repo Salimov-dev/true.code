@@ -16,10 +16,11 @@ const Component = styled.span<StyledIconProps>`
   &:hover {
     transform: scale(1.2);
     color: coral;
+    border: none;
   }
 `;
 
-const IconStyled: FC<IProps> = ({ children }) => {
+const IconStyled: FC<IProps> = ({ children }): JSX.Element => {
   return <Component>{children}</Component>;
 };
 

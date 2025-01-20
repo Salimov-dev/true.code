@@ -1,19 +1,19 @@
-import { Row, Col, Flex, Spin } from "antd";
+import { Flex, Spin } from "antd";
 import styled from "styled-components";
-import ProductCard from "@common/card/product-card";
 import { IProduct } from "@interfaces/product.interface";
-import EmptyProductsPage from "@pages/product/empty-product.page";
+import EmptyProductsPage from "@pages/product/empty-product/empty-product.page";
+import ProductGridItems from "./items.product-grid";
 
 interface ProductGridProps {
   products: IProduct[];
   totalQuantity: number;
   isLoading: boolean;
+  setCurrentPage: (page: number | ((prev: number) => number)) => void;
+  pageSize: number;
+  sort: string;
+  searchName: string;
+  order: "asc" | "desc" | undefined;
 }
-
-const ColWrapper = styled(Col)`
-  display: flex;
-  justify-content: center;
-`;
 
 const Loader = styled(Flex)`
   width: 100%;
@@ -26,19 +26,23 @@ const Loader = styled(Flex)`
 const ProductGrid = ({
   products,
   totalQuantity,
-  isLoading
+  isLoading,
+  setCurrentPage,
+  pageSize,
+  sort,
+  searchName,
+  order
 }: ProductGridProps) => {
   return !isLoading ? (
     totalQuantity ? (
-      <Row gutter={[16, 24]} justify="center">
-        {products?.map((product) => {
-          return (
-            <ColWrapper key={product.id} xs={24} sm={12} md={12} lg={8} xl={6}>
-              <ProductCard product={product} />
-            </ColWrapper>
-          );
-        })}
-      </Row>
+      <ProductGridItems
+        products={products}
+        setCurrentPage={setCurrentPage}
+        pageSize={pageSize}
+        sort={sort}
+        order={order}
+        searchName={searchName}
+      />
     ) : (
       <EmptyProductsPage />
     )

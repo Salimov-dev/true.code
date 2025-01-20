@@ -7,7 +7,7 @@ interface IProps {
   product: IProduct;
 }
 
-const CardCarousel: FC<IProps> = ({ product }) => {
+const CardCarousel: FC<IProps> = ({ product }): JSX.Element => {
   return (
     <Carousel
       effect="fade"

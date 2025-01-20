@@ -1,12 +1,23 @@
 import { debounce } from "lodash";
-import { useEffect, useState, useCallback } from "react";
-import useProductStore from "@store/product.store";
-import { Flex, Input, Layout, Select, Spin, Typography } from "antd";
+import { FC, useCallback, Dispatch, SetStateAction } from "react";
 import styled from "styled-components";
-import ProductGrid from "./components/product-grid";
-import PaginationStyled from "@common/pagination/pagination-styled";
+import useProductStore from "@store/product.store";
+import { Flex, Input, Select, Spin, Typography } from "antd";
 import { IProductFindWithFilters } from "@interfaces/product.interface";
-import config from "@config/config.json";
+import { DEFAULT_PAGINATION } from "@config/pagination.config";
+
+interface FiltersPanelProductGridProps {
+  pageSize: number;
+  order: "asc" | "desc" | undefined;
+  searchName: string | undefined;
+  totalQuantity: number;
+  sort: string;
+  isLoading: boolean;
+  setOrder: Dispatch<SetStateAction<"asc" | "desc" | undefined>>;
+  setSort: Dispatch<SetStateAction<string>>;
+  setCurrentPage: Dispatch<SetStateAction<number>>;
+  setSearchName: Dispatch<SetStateAction<string | undefined>>;
+}
 
 const Component = styled(Flex)`
   justify-content: space-between;
@@ -18,29 +29,47 @@ const FilterAndSortContainer = styled(Flex)`
   gap: 2px;
 `;
 
-const FiltersPanelProductGrid = ({
+const SELECT_OPTIONS = [
+  {
+    value: "asc",
+    label: "Сначала старые товары"
+  },
+  {
+    value: "desc",
+    label: "Сначала новые товары"
+  }
+];
+
+const FiltersPanelProductGrid: FC<FiltersPanelProductGridProps> = ({
   pageSize,
-  sortOrder,
+  sort,
+  order,
   searchName,
   totalQuantity,
   isLoading,
-  setSortOrder,
+  setOrder,
   setCurrentPage,
+  setSort,
   setSearchName
-}) => {
+}): JSX.Element => {
   const { fetchProductsWithFilters } = useProductStore();
 
   const handleSortChange = (value: string | undefined) => {
     const order = value === "none" ? undefined : (value as "asc" | "desc");
-    setSortOrder(order);
+    setOrder(order);
 
     const newPaginationParams: IProductFindWithFilters = {
       page: 1,
-      limit: config.defaultPagination.limit,
-      sort: order ? "name" : undefined,
+      limit: DEFAULT_PAGINATION.limit,
+      sort,
       order,
       filters: { name: searchName }
     };
+
+    if (!order) {
+      setCurrentPage(1);
+      return fetchProductsWithFilters(DEFAULT_PAGINATION);
+    }
 
     setCurrentPage(1);
     fetchProductsWithFilters(newPaginationParams);
@@ -51,15 +80,15 @@ const FiltersPanelProductGrid = ({
       const newPaginationParams: IProductFindWithFilters = {
         page: 1,
         limit: pageSize,
-        sort: sortOrder ? "name" : undefined,
-        order: sortOrder,
+        sort,
+        order,
         filters: { name }
       };
 
       setCurrentPage(1);
       fetchProductsWithFilters(newPaginationParams);
     }, 300),
-    [pageSize, sortOrder, fetchProductsWithFilters]
+    [pageSize, order, fetchProductsWithFilters]
   );
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -78,26 +107,19 @@ const FiltersPanelProductGrid = ({
         <Input
           placeholder="Искать по названию"
           value={searchName}
+          allowClear
           onChange={handleSearchChange}
         />
         <Select
           showSearch
           allowClear
-          placeholder="Выберите сортировку"
+          placeholder="По дате добавления"
           optionFilterProp="label"
+          defaultValue=""
+          value={order}
           onChange={handleSortChange}
-          value={sortOrder}
           style={{ width: "300px" }}
-          options={[
-            {
-              value: "asc",
-              label: "По алфавиту"
-            },
-            {
-              value: "desc",
-              label: "Против алфавита"
-            }
-          ]}
+          options={SELECT_OPTIONS}
         />
       </FilterAndSortContainer>
     </Component>

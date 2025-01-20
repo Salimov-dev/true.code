@@ -1,7 +1,8 @@
 import useProductStore from "@store/product.store";
 import { Button } from "antd";
+import { FC } from "react";
 
-const ProductsGenerateButton = () => {
+const ProductsGenerateButton: FC = (): JSX.Element => {
   const { generateRandomProducts } = useProductStore();
 
   const handleGenerate = () => {

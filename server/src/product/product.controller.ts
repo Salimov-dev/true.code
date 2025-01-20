@@ -14,7 +14,7 @@ import { Request } from 'express';
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { JwtAuthGuard } from '@auth/guards/jwt-auth.guard';
+import { JwtAuthGuard, Public } from '@auth/guards/jwt-auth.guard';
 import { PrismaService } from '@prisma/prisma.service';
 
 @Controller('product')
@@ -32,6 +32,7 @@ export class ProductController {
     return this.productService.create(createProductDto, userId);
   }
 
+  @Public()
   @Get('find-all')
   findAll() {
     return this.productService.findAll();
@@ -57,12 +58,13 @@ export class ProductController {
     return this.productService.remove(id);
   }
 
+  @Public()
   @Get('find-with-filters')
   async findWithFilters(
     @Query('page') page = '1',
-    @Query('limit') limit = '5',
+    @Query('limit') limit = '8',
     @Query('sort') sort = 'createdAt',
-    @Query('order') order = 'asc',
+    @Query('order') order = 'desc',
     @Query('filters') filters: string
   ) {
     const pageNumber = parseInt(page, 10);

@@ -1,14 +1,21 @@
 import { Card, Flex } from "antd";
-import { FC } from "react";
+import { FC, useState } from "react";
 import styled from "styled-components";
 import { IProduct } from "@interfaces/product.interface";
 import CoverProductCard from "./components/cover.product-card";
 import HeaderProductCard from "./components/header.product-card";
 import ContentProductCard from "./components/content.product-card ";
 import FooterProductCard from "./components/footer.product-card";
+import ProductDetailsPage from "@pages/product/product-details/product-details.page";
+import DetailButtonProductCard from "./components/detail-button.product-card";
 
 interface IProps {
   product: IProduct;
+  setCurrentPage: (page: number | ((prev: number) => number)) => void;
+  pageSize: number;
+  sort: string;
+  searchName: string;
+  order: "asc" | "desc" | undefined;
 }
 
 const ProductDetails = styled(Flex)`
@@ -22,18 +29,53 @@ const CardComponent = styled(Card)`
   width: 100%;
 `;
 
-const ProductCard: FC<IProps> = ({ product }) => {
-  return (
-    <CardComponent hoverable cover={<CoverProductCard product={product} />}>
-      <ProductDetails vertical>
-        <HeaderProductCard product={product} />
+const ProductCard: FC<IProps> = ({
+  product,
+  setCurrentPage,
+  pageSize,
+  sort,
+  searchName,
+  order
+}): JSX.Element => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-        <Flex vertical>
-          <ContentProductCard product={product} />
-          <FooterProductCard product={product} />
-        </Flex>
-      </ProductDetails>
-    </CardComponent>
+  const handleOpenProductDetails = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+  };
+
+  return (
+    <>
+      <CardComponent hoverable cover={<CoverProductCard product={product} />}>
+        <ProductDetails vertical>
+          <HeaderProductCard product={product} />
+          <DetailButtonProductCard
+            onOpenProductDetails={handleOpenProductDetails}
+          />
+
+          <Flex vertical>
+            <ContentProductCard product={product} />
+            <FooterProductCard
+              product={product}
+              setCurrentPage={setCurrentPage}
+              pageSize={pageSize}
+              sort={sort}
+              order={order}
+              searchName={searchName}
+            />
+          </Flex>
+        </ProductDetails>
+      </CardComponent>
+
+      <ProductDetailsPage
+        isModalOpen={isModalOpen}
+        onCancel={handleModalClose}
+        product={product}
+      />
+    </>
   );
 };
 

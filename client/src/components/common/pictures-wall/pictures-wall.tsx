@@ -18,7 +18,7 @@ const PicturesWall: FC<IProps> = ({
   form,
   initialValues,
   setTemporaryImages
-}) => {
+}): JSX.Element => {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [fileList, setFileList] = useState<UploadFile[]>([]);
